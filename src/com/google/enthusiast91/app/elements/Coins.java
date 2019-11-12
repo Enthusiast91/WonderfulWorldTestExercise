@@ -1,4 +1,4 @@
-package com.google.enthusiast91.app;
+package com.google.enthusiast91.app.elements;
 
 public class Coins {
     private int value;
@@ -29,5 +29,4 @@ public class Coins {
     public int getNumberOfCountry() {
         return numberOfCountry;
     }
-
 }
