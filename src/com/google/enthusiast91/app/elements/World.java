@@ -3,8 +3,8 @@ package com.google.enthusiast91.app.elements;
 import java.util.Iterator;
 
 public class World implements Iterable<Country> {
-    public static final int SIZE = 10;
-    public static final int AMOUNT_COUNTRIES = SIZE * SIZE;
+    private static final int SIZE = 10;
+    private static final int AMOUNT_COUNTRIES = SIZE * SIZE;
     private final Country[][] countries = new Country[SIZE][SIZE];
 
     public World() {
@@ -38,50 +38,58 @@ public class World implements Iterable<Country> {
         }
     }
 
-//    public Country getCountry(int countryNumber) {
-//        if (countryNumber < 0 || countryNumber >= SIZE) {
-//            return null;
-//        }
-//        int line = countryNumber / SIZE;
-//        int column = countryNumber % SIZE;
-//        return map[line][column];
-//    }
-
-    public Country getCountry(int line, int column) {
-        if (line < 0 || line >= SIZE || column < 0 || column >= SIZE) {
-            return null;
+    public void issueAnnualBudget(int annualBudget) {
+        for (Country country : this) {
+            country.replenishBudget(annualBudget);
         }
-        return countries[line][column];
+    }
+
+    public void calculateCountriesBudgetforMonth() {
+        for (Country country : this) {
+            country.getBudget().moneyTransferFromTemporaryStorage();
+            country.getBudget().calculateMoneyForMonth();
+        }
+    }
+
+    public void resetCountriesDataAboutTrade() {
+        for (Country country : this) {
+            country.clearData();
+        }
     }
 
     public void trade() {
-        prettyResport();
         for (Country country : this) {
             country.trade();
         }
     }
 
-    public void report() {
-        for (Country country : this) {
-            country.report();
-        }
-    }
+    public void report(int numberOfColumns) {
+        int amountStrings = countries[0][0].getReport().length;
 
-    public void prettyResport() {
-        int column = 5;
-        for (int i = 0; i < AMOUNT_COUNTRIES / column; i++) {
-            String[][] arrReport = new String[column][3];
-            for (int j = 0; j < column; j++) {
-                arrReport[j] = countries[(i * column + j) / SIZE][(i * column + j) % SIZE].prettyReport();
+        for (int i = 0; i < AMOUNT_COUNTRIES / numberOfColumns; i++) {
+            String[][] arrReport = new String[numberOfColumns][amountStrings];
+            for (int j = 0; j < numberOfColumns; j++) {
+                int m = (i * numberOfColumns + j) / SIZE;
+                int n = (i * numberOfColumns + j) % SIZE;
+                arrReport[j] = countries[m][n].getReport();
             }
-            for (int k = 0; k < 3; k++) {
-                for (int j = 0; j < column; j++) {
-                    System.out.printf("%48s", arrReport[j][k]);
+            for (int k = 0; k < amountStrings; k++) {
+                for (int j = 0; j < numberOfColumns; j++) {
+                    System.out.printf("%46s", arrReport[j][k]);
                 }
                 System.out.println();
             }
             System.out.println();
         }
+    }
+
+    public boolean victoryConditionsExecuted() {
+        for (Country country : this) {
+            if (country.getBudget().getSizeUntouchableCoinCollection() < 100) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

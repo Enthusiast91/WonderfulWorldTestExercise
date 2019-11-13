@@ -2,32 +2,38 @@ package com.google.enthusiast91.app.elements;
 
 import java.util.*;
 
-public class Budget {
+class Budget {
     private final HashMap<Integer, Coin> treasury = new HashMap<>();
     private final HashMap<Integer, Coin> untouchableCoinCollection = new HashMap<>();
-    private int moneyOfTreasury;
-    private int moneyForMonth;
+    private List<Coin> temporaryStorage = new ArrayList<>();
+    private int moneyOfTreasury = 0;
+    private int moneyForMonth = 0;
 
-    public Budget(int numberOfCountry, int startValue) {
-        treasury.put(numberOfCountry, new Coin(startValue - 1, numberOfCountry));
-        untouchableCoinCollection.put(numberOfCountry, new Coin(1, numberOfCountry));
-        moneyOfTreasury = startValue - 1;
-        moneyForMonth = startValue / 2;
-    }
-
-    public int getMoneyOfTreasury() {
+    int getMoneyOfTreasury() {
         return moneyOfTreasury;
     }
 
-    public int getMoneyForMonth() {
+    int getMoneyForMonth() {
         return moneyForMonth;
     }
 
-    public int getUntouchableCoinCollectionSize() {
+    int getSizeUntouchableCoinCollection() {
         return untouchableCoinCollection.size();
     }
 
-    public void addCoin(Coin coin) {
+    void calculateMoneyForMonth() {
+        moneyForMonth = (moneyOfTreasury + untouchableCoinCollection.size()) / 2;
+        if (moneyForMonth > moneyOfTreasury) {
+            moneyForMonth = moneyOfTreasury;
+        }
+    }
+
+    void moneyTransferFromTemporaryStorage() {
+        addCoins(temporaryStorage);
+        temporaryStorage.clear();
+    }
+
+    void addCoin(Coin coin) {
         if (!untouchableCoinCollection.containsKey(coin.getNumCountry())) {
             untouchableCoinCollection.put(coin.getNumCountry(), coin.subValue(1));
         }
@@ -42,13 +48,17 @@ public class Budget {
         moneyOfTreasury += coin.getValue();
     }
 
-    public void addCoins(List<Coin> sumOfExpenses) {
+    private void addCoins(List<Coin> sumOfExpenses) {
         for (Coin coin : sumOfExpenses) {
-            addCoin(coin);
+           addCoin(coin);
         }
     }
 
-    public List<Coin> subCoins(int valueOfExpenses) {
+    void addCoinsInTemporaryStorageUntilNextMonth(List<Coin> sumOfExpenses) {
+        temporaryStorage.addAll(sumOfExpenses);
+    }
+
+    List<Coin> subCoins(int valueOfExpenses) {
         moneyOfTreasury -= valueOfExpenses;
         moneyForMonth -= valueOfExpenses;
         List<Coin> coinList = new ArrayList<>();
@@ -69,9 +79,5 @@ public class Budget {
 
     private Coin getNextCoin(Iterator<Map.Entry<Integer, Coin>> treasuryEntry) {
         return treasuryEntry.next().getValue();
-    }
-
-    public boolean coinsAllCountriesAvailable() {
-        return untouchableCoinCollection.size() == World.AMOUNT_COUNTRIES;
     }
 }

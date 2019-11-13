@@ -1,6 +1,6 @@
 package com.google.enthusiast91.app.elements;
 
-public class Coin {
+class Coin {
     private int value;
     private int numberOfCountry;
 
@@ -9,15 +9,15 @@ public class Coin {
         this.numberOfCountry = numberOfCountry;
     }
 
-    public int getValue() {
+    int getValue() {
         return value;
     }
 
-    public void addValue(int value) {
+    void addValue(int value) {
         this.value += value;
     }
 
-    public Coin subValue(int value) {
+    Coin subValue(int value) {
         if (this.value < value) {
             value = this.value;
         }
@@ -25,7 +25,7 @@ public class Coin {
         return new Coin(value, numberOfCountry);
     }
 
-    public int getNumCountry() {
+    int getNumCountry() {
         return numberOfCountry;
     }
 }

@@ -3,96 +3,78 @@ package com.google.enthusiast91.app.elements;
 import java.util.List;
 
 public class Country {
+    private final Budget budget = new Budget();
     private int number;
-    private final Budget budget;
-    private int sumBuy;
-    private int sumSale;
+    private int amountOfExpenses;
+    private int amountOfProfit;
 
     private Country countryLeft;
     private Country countryRight;
     private Country countryTop;
     private Country countryBottom;
 
-    public Country(int number) {
+    Country(int number) {
         this.number = number;
-        budget = new Budget(number, 20);
     }
 
-    public int getNumber() {
-        return number;
+    Budget getBudget() {
+        return budget;
     }
 
-    public int getSumBuy() {
-        return sumBuy;
-    }
-
-    public int getSumSale() {
-        return sumSale;
-    }
-
-    public Country getCountryLeft() {
-        return countryLeft;
-    }
-
-    public void setCountryLeft(Country countryLeft) {
+    void setCountryLeft(Country countryLeft) {
         this.countryLeft = countryLeft;
     }
 
-    public Country getCountryRight() {
-        return countryRight;
-    }
-
-    public void setCountryRight(Country countryRight) {
+    void setCountryRight(Country countryRight) {
         this.countryRight = countryRight;
     }
 
-    public Country getCountryTop() {
-        return countryTop;
-    }
-
-    public void setCountryTop(Country countryTop) {
+    void setCountryTop(Country countryTop) {
         this.countryTop = countryTop;
     }
 
-    public Country getCountryBottom() {
-        return countryBottom;
-    }
-
-    public void setCountryBottom(Country countryBottom) {
+    void setCountryBottom(Country countryBottom) {
         this.countryBottom = countryBottom;
     }
 
+    void replenishBudget(int annualBudget) {
+        budget.addCoin(new Coin(annualBudget, number));
+    }
 
-    private void buy(Country sellerCountry, int sumOfExpenses) {
-        if (sumOfExpenses > 0) {
-            List<Coin> coinPaid = budget.subCoins(sumOfExpenses);
+    private void buy(Country sellerCountry, int expenses) {
+        if (expenses > 0) {
+            amountOfExpenses += expenses;
+            List<Coin> coinPaid = budget.subCoins(expenses);
             sellerCountry.sale(coinPaid);
         }
     }
 
     private void sale(List<Coin> profit) {
-        budget.addCoins(profit);
+        for (Coin coin : profit) {
+            amountOfProfit += coin.getValue();
+        }
+        budget.addCoinsInTemporaryStorageUntilNextMonth(profit);
     }
 
-    public void trade() {
-        int moneyMonth = budget.getMoneyForMonth();
+    void trade() {
+        int moneyForMonth = budget.getMoneyForMonth();
         int moneyForBuyInBottomCountry = 0;
         int moneyForBuyInRightCountry = 0;
         int moneyForBuyInLeftCountry = 0;
         int moneyForBuyInTopCountry = 0;
 
-        while (moneyMonth > 0) {
+        while (moneyForMonth > 0) {
             moneyForBuyInBottomCountry++;
-            if (--moneyMonth == 0) { break; }
+            if (--moneyForMonth == 0) { break; }
 
             moneyForBuyInRightCountry++;
-            if (--moneyMonth == 0) { break; }
+            if (--moneyForMonth == 0) { break; }
 
             moneyForBuyInLeftCountry++;
-            if (--moneyMonth == 0) { break; }
+            if (--moneyForMonth == 0) { break; }
 
             moneyForBuyInTopCountry++;
-            if (--moneyMonth == 0) { break; }
+            if (--moneyForMonth == 0) { break; }
         }
 
         buy(countryBottom, moneyForBuyInBottomCountry);
@@ -101,18 +83,17 @@ public class Country {
         buy(countryTop, moneyForBuyInTopCountry);
     }
 
-    public void report() {
-        System.out.println("\nБюджет на начало месяца страны №" + number + ": " +
-                (budget.getMoneyOfTreasury() + budget.getUntouchableCoinCollectionSize()) +
-                "\nРасход: " + sumBuy +
-                "\nПриход: " + sumSale);
+    void clearData() {
+        amountOfExpenses = 0;
+        amountOfProfit = 0;
     }
 
-    public String[] prettyReport() {
-        String[] arrString = new String[3];
-        arrString[0] = "Бюджет на начало месяца страны №" + number + ": " + (budget.getMoneyOfTreasury() + budget.getUntouchableCoinCollectionSize());
-        arrString[1] = "Расход: " + sumBuy;
-        arrString[2] = "Приход: " + sumSale;
+    String[] getReport() {
+        String[] arrString = new String[4];
+        arrString[0] = "Бюджет на начало месяца страны №" + number + ": " + (budget.getMoneyOfTreasury() + budget.getSizeUntouchableCoinCollection());
+        arrString[1] = "Монет в коллекции: " + budget.getSizeUntouchableCoinCollection();
+        arrString[2] = "Расход: " + amountOfExpenses;
+        arrString[3] = "Приход: " + amountOfProfit;
         return arrString;
     }
 }
