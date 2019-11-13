@@ -1,9 +1,10 @@
 package com.google.enthusiast91.app.elements;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class Country {
-    private final Budget budget = new Budget();
+    private final Budget budget;
     private int number;
     private int amountOfExpenses;
     private int amountOfProfit;
@@ -15,6 +16,7 @@ public class Country {
 
     Country(int number) {
         this.number = number;
+        budget = new Budget(number);
     }
 
     Budget getBudget() {
@@ -44,13 +46,13 @@ public class Country {
     private void buy(Country sellerCountry, int expenses) {
         if (expenses > 0) {
             amountOfExpenses += expenses;
-            List<Coin> coinPaid = budget.subCoins(expenses);
+            HashMap<Integer, Coin> coinPaid = budget.subCoins(expenses);
             sellerCountry.sale(coinPaid);
         }
     }
 
-    private void sale(List<Coin> profit) {
-        for (Coin coin : profit) {
+    private void sale(HashMap<Integer, Coin> profit) {
+        for (Coin coin : profit.values()) {
             amountOfProfit += coin.getValue();
         }
         budget.addCoinsInTemporaryStorageUntilNextMonth(profit);

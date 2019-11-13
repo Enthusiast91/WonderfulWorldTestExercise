@@ -1,13 +1,20 @@
 package com.google.enthusiast91.app.elements;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 class Budget {
     private final HashMap<Integer, Coin> treasury = new HashMap<>();
     private final HashMap<Integer, Coin> untouchableCoinCollection = new HashMap<>();
-    private List<Coin> temporaryStorage = new ArrayList<>();
+    private HashMap<Integer, Coin> temporaryStorage = new HashMap<>();
     private int moneyOfTreasury = 0;
     private int moneyForMonth = 0;
+    private int numberCountry;
+
+    Budget(int numberCountry) {
+        this.numberCountry = numberCountry;
+    }
 
     int getMoneyOfTreasury() {
         return moneyOfTreasury;
@@ -40,41 +47,47 @@ class Budget {
         if (coin.getValue() == 0)
             return;
 
-        if (treasury.containsKey(coin.getNumCountry())) {
-            treasury.get(coin.getNumCountry()).addValue(coin.getValue());
-        } else {
-            treasury.put(coin.getNumCountry(), coin);
-        }
+        addCoinToHashMap(coin, treasury);
         moneyOfTreasury += coin.getValue();
     }
 
-    private void addCoins(List<Coin> sumOfExpenses) {
-        for (Coin coin : sumOfExpenses) {
-           addCoin(coin);
+    void addCoinsInTemporaryStorageUntilNextMonth(HashMap<Integer, Coin> sumOfExpenses) {
+        for (Coin coin : sumOfExpenses.values()) {
+            addCoinToHashMap(coin, temporaryStorage);
         }
     }
 
-    void addCoinsInTemporaryStorageUntilNextMonth(List<Coin> sumOfExpenses) {
-        temporaryStorage.addAll(sumOfExpenses);
-    }
-
-    List<Coin> subCoins(int valueOfExpenses) {
+    HashMap<Integer, Coin> subCoins(int valueOfExpenses) {
         moneyOfTreasury -= valueOfExpenses;
         moneyForMonth -= valueOfExpenses;
-        List<Coin> coinList = new ArrayList<>();
+        HashMap<Integer, Coin> coinMap = new HashMap<>();
         Iterator<Map.Entry<Integer, Coin>> treasuryEntry = treasury.entrySet().iterator();
 
         while (treasuryEntry.hasNext() && valueOfExpenses > 0) {
             Coin treasuryCoin = getNextCoin(treasuryEntry);
             Coin coin = treasuryCoin.subValue(valueOfExpenses);
             valueOfExpenses -= coin.getValue();
-            coinList.add(coin);
+            coinMap.put(coin.getNumCountry(), coin);
 
             if (treasuryCoin.getValue() == 0) {
                 treasuryEntry.remove();
             }
         }
-        return coinList;
+        return coinMap;
+    }
+
+    private void addCoins(HashMap<Integer, Coin> sumOfExpenses) {
+        for (Coin coin : sumOfExpenses.values()) {
+            addCoin(coin);
+        }
+    }
+
+    private void addCoinToHashMap(Coin coin, HashMap<Integer, Coin> purpose) {
+        if (purpose.containsKey(coin.getNumCountry())) {
+            purpose.get(coin.getNumCountry()).addValue(coin.getValue());
+        } else {
+            purpose.put(coin.getNumCountry(), coin);
+        }
     }
 
     private Coin getNextCoin(Iterator<Map.Entry<Integer, Coin>> treasuryEntry) {
