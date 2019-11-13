@@ -11,10 +11,10 @@ public class Launcher {
             world.issueAnnualBudget(20);
             for (int j = 0; j < 12; j++) {
                 world.calculateCountriesBudgetforMonth();
-                world.report(10);
+                world.report(3);
                 world.resetCountriesDataAboutTrade();
                 world.trade();
-                System.out.printf("\n\n" + (char)27 + "[34m============================================= Месяц %03d =============================================\n", i * 12 + j);
+                System.out.printf((char)27 + "[34m============================================= Месяц %03d =============================================\n", i * 12 + j);
                 System.out.println((char)27 + "[0m");
             }
         }

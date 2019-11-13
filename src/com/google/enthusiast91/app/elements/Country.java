@@ -89,11 +89,12 @@ public class Country {
     }
 
     String[] getReport() {
-        String[] arrString = new String[4];
+        String[] arrString = new String[5];
         arrString[0] = "Бюджет на начало месяца страны №" + number + ": " + (budget.getMoneyOfTreasury() + budget.getSizeUntouchableCoinCollection());
-        arrString[1] = "Монет в коллекции: " + budget.getSizeUntouchableCoinCollection();
-        arrString[2] = "Расход: " + amountOfExpenses;
-        arrString[3] = "Приход: " + amountOfProfit;
+        arrString[1] = "Бюджет на месяц: " + budget.getMoneyForMonth();
+        arrString[2] = "Монет в коллекции: " + budget.getSizeUntouchableCoinCollection();
+        arrString[3] = "Расход: " + amountOfExpenses;
+        arrString[4] = "Приход: " + amountOfProfit;
         return arrString;
     }
 }

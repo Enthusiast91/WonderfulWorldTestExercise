@@ -3,7 +3,7 @@ package com.google.enthusiast91.app.elements;
 import java.util.Iterator;
 
 public class World implements Iterable<Country> {
-    private static final int SIZE = 10;
+    private static final int SIZE = 3;
     private static final int AMOUNT_COUNTRIES = SIZE * SIZE;
     private final Country[][] countries = new Country[SIZE][SIZE];
 
@@ -85,7 +85,7 @@ public class World implements Iterable<Country> {
 
     public boolean victoryConditionsExecuted() {
         for (Country country : this) {
-            if (country.getBudget().getSizeUntouchableCoinCollection() < 100) {
+            if (country.getBudget().getSizeUntouchableCoinCollection() < AMOUNT_COUNTRIES) {
                 return false;
             }
         }
