@@ -1,10 +1,10 @@
 package com.google.enthusiast91.app.elements;
 
-public class Coins {
+public class Coin {
     private int value;
     private int numberOfCountry;
 
-    Coins(int value, int numberOfCountry) {
+    Coin(int value, int numberOfCountry) {
         this.value = value;
         this.numberOfCountry = numberOfCountry;
     }
@@ -21,12 +21,12 @@ public class Coins {
         this.value += value;
     }
 
-    public Coins subValue(int value) {
+    public Coin subValue(int value) {
         if (this.value < value) {
             value = this.value;
         }
         this.value -= value;
-        return new Coins(value, numberOfCountry);
+        return new Coin(value, numberOfCountry);
     }
 
     public int getNumCountry() {

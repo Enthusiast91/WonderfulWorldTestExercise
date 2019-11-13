@@ -3,55 +3,71 @@ package com.google.enthusiast91.app.elements;
 import java.util.*;
 
 public class Budget {
-    private int money;
+    private final HashMap<Integer, Coin> treasury = new HashMap<>();
+    private final HashMap<Integer, Coin> untouchableCoinCollection = new HashMap<>();
+    private int moneyOfTreasury;
     private int moneyForMonth;
-    private final HashMap<Integer, Coins> treasury = new HashMap<>();
-    private final HashMap<Integer, Coins> coinCollection = new HashMap<>();
 
     public Budget(int numberOfCountry, int startValue) {
-        treasury.put(numberOfCountry, new Coins(startValue - 1, numberOfCountry));
-        coinCollection.put(numberOfCountry, new Coins(1, numberOfCountry));
-        money = startValue;
-        moneyForMonth = money / 2;
+        treasury.put(numberOfCountry, new Coin(startValue - 1, numberOfCountry));
+        untouchableCoinCollection.put(numberOfCountry, new Coin(1, numberOfCountry));
+        moneyOfTreasury = startValue - 1;
+        moneyForMonth = startValue / 2;
     }
 
-    public int getMoney() {
-        return money;
+    public int getMoneyOfTreasury() {
+        return moneyOfTreasury;
     }
 
     public int getMoneyForMonth() {
         return moneyForMonth;
     }
 
-      public void addCoins(Coins coins) {
-        if (treasury.containsKey(coins.getNumCountry())) {
-            treasury.get(coins.getNumCountry()).addValue(coins.getValue());
-        } else {
-            if(!coinCollection.containsKey(coins.getNumCountry())) {
-                coinCollection.put(coins.getNumCountry(), coins.subValue(1));
-            }
-            if (coins.getValue() > 0) {
-                treasury.put(coins.getNumCountry(), coins);
-            }
+    public void addCoin(Coin coin) {
+        if (!untouchableCoinCollection.containsKey(coin.getNumCountry())) {
+            untouchableCoinCollection.put(coin.getNumCountry(), coin.subValue(1));
         }
-        money += coins.getValue();
+        if (coin.getValue() == 0)
+            return;
+
+        if (treasury.containsKey(coin.getNumCountry())) {
+            treasury.get(coin.getNumCountry()).addValue(coin.getValue());
+        } else {
+            treasury.put(coin.getNumCountry(), coin);
+        }
+        moneyOfTreasury += coin.getValue();
     }
 
-    public List<Coins> subCoins(int value) {
-        money -= value;
-        moneyForMonth -= value;
-        List<Coins> coinsList = new ArrayList<>();
-        Iterator<Map.Entry<Integer, Coins>> treasuryEntry = treasury.entrySet().iterator();
-
-        while (treasuryEntry.hasNext() && value > 0) {
-            Coins coins = treasuryEntry.next().getValue().subValue(value);
-            value -= coins.getValue();
-            coinsList.add(coins);
+    public void addCoins(List<Coin> sumOfExpenses) {
+        for (Coin coin : sumOfExpenses) {
+            addCoin(coin);
         }
-        return coinsList;
+    }
+
+    public List<Coin> subCoins(int valueOfExpenses) {
+        moneyOfTreasury -= valueOfExpenses;
+        moneyForMonth -= valueOfExpenses;
+        List<Coin> coinList = new ArrayList<>();
+        Iterator<Map.Entry<Integer, Coin>> treasuryEntry = treasury.entrySet().iterator();
+
+        while (treasuryEntry.hasNext() && valueOfExpenses > 0) {
+            Coin treasuryCoin = getNextCoin(treasuryEntry);
+            Coin coin = treasuryCoin.subValue(valueOfExpenses);
+            valueOfExpenses -= coin.getValue();
+            coinList.add(coin);
+
+            if (treasuryCoin.getValue() == 0) {
+                treasuryEntry.remove();
+            }
+        }
+        return coinList;
+    }
+
+    private Coin getNextCoin(Iterator<Map.Entry<Integer, Coin>> treasuryEntry) {
+        return treasuryEntry.next().getValue();
     }
 
     public boolean coinsAllCountriesAvailable() {
-        return coinCollection.size() == World.AMOUNT_COUNTRIES;
+        return untouchableCoinCollection.size() == World.AMOUNT_COUNTRIES;
     }
 }
