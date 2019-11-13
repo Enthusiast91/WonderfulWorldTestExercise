@@ -58,21 +58,26 @@ class Budget {
     }
 
     HashMap<Integer, Coin> subCoins(int valueOfExpenses) {
+        if (numberCountry == 0) {
+            int n = 0;
+        }
         moneyOfTreasury -= valueOfExpenses;
         moneyForMonth -= valueOfExpenses;
+
         HashMap<Integer, Coin> coinMap = new HashMap<>();
-        Iterator<Map.Entry<Integer, Coin>> treasuryEntry = treasury.entrySet().iterator();
 
-        while (treasuryEntry.hasNext() && valueOfExpenses > 0) {
-            Coin treasuryCoin = getNextCoin(treasuryEntry);
-            Coin coin = treasuryCoin.subValue(valueOfExpenses);
-            valueOfExpenses -= coin.getValue();
-            coinMap.put(coin.getNumCountry(), coin);
-
-            if (treasuryCoin.getValue() == 0) {
-                treasuryEntry.remove();
+        while (valueOfExpenses > 0) {
+            Iterator<Map.Entry<Integer, Coin>> treasuryEntry = treasury.entrySet().iterator();
+            while (treasuryEntry.hasNext() && valueOfExpenses > 0) {
+                Coin treasuryCoin = getNextCoin(treasuryEntry);
+                addCoinToHashMap(treasuryCoin.subValue(1), coinMap);
+                valueOfExpenses--;
+                if (treasuryCoin.getValue() == 0) {
+                    treasuryEntry.remove();
+                }
             }
         }
+
         return coinMap;
     }
 

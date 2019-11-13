@@ -3,7 +3,7 @@ package com.google.enthusiast91.app.elements;
 import java.util.Iterator;
 
 public class World implements Iterable<Country> {
-    private static final int SIZE = 3;
+    private static final int SIZE = 10;
     private static final int AMOUNT_COUNTRIES = SIZE * SIZE;
     private final Country[][] countries = new Country[SIZE][SIZE];
 
