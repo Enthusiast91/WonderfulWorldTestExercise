@@ -102,8 +102,17 @@ public class Country {
     }
 
     public void report() {
-        System.out.println("Бюджет на начало месяца: " + budget.getMoneyOfTreasury() +
+        System.out.println("\nБюджет на начало месяца страны №" + number + ": " +
+                (budget.getMoneyOfTreasury() + budget.getUntouchableCoinCollectionSize()) +
                 "\nРасход: " + sumBuy +
                 "\nПриход: " + sumSale);
+    }
+
+    public String[] prettyReport() {
+        String[] arrString = new String[3];
+        arrString[0] = "Бюджет на начало месяца страны №" + number + ": " + (budget.getMoneyOfTreasury() + budget.getUntouchableCoinCollectionSize());
+        arrString[1] = "Расход: " + sumBuy;
+        arrString[2] = "Приход: " + sumSale;
+        return arrString;
     }
 }

@@ -13,10 +13,6 @@ public class Coin {
         return value;
     }
 
-    public void setValue(int value) {
-        this.value = value;
-    }
-
     public void addValue(int value) {
         this.value += value;
     }

@@ -23,6 +23,10 @@ public class Budget {
         return moneyForMonth;
     }
 
+    public int getUntouchableCoinCollectionSize() {
+        return untouchableCoinCollection.size();
+    }
+
     public void addCoin(Coin coin) {
         if (!untouchableCoinCollection.containsKey(coin.getNumCountry())) {
             untouchableCoinCollection.put(coin.getNumCountry(), coin.subValue(1));

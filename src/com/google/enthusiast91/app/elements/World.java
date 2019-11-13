@@ -44,14 +44,44 @@ public class World implements Iterable<Country> {
 //        }
 //        int line = countryNumber / SIZE;
 //        int column = countryNumber % SIZE;
-//        return map[column][line];
+//        return map[line][column];
 //    }
 
     public Country getCountry(int line, int column) {
         if (line < 0 || line >= SIZE || column < 0 || column >= SIZE) {
             return null;
         }
-        return countries[column][line];
+        return countries[line][column];
+    }
+
+    public void trade() {
+        prettyResport();
+        for (Country country : this) {
+            country.trade();
+        }
+    }
+
+    public void report() {
+        for (Country country : this) {
+            country.report();
+        }
+    }
+
+    public void prettyResport() {
+        int column = 5;
+        for (int i = 0; i < AMOUNT_COUNTRIES / column; i++) {
+            String[][] arrReport = new String[column][3];
+            for (int j = 0; j < column; j++) {
+                arrReport[j] = countries[(i * column + j) / SIZE][(i * column + j) % SIZE].prettyReport();
+            }
+            for (int k = 0; k < 3; k++) {
+                for (int j = 0; j < column; j++) {
+                    System.out.printf("%48s", arrReport[j][k]);
+                }
+                System.out.println();
+            }
+            System.out.println();
+        }
     }
 
     @Override
