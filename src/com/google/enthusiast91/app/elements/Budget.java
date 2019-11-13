@@ -1,35 +1,57 @@
 package com.google.enthusiast91.app.elements;
 
+import java.util.*;
+
 public class Budget {
     private int money;
-    private final Coins[] coinsWallet = new Coins[100];
+    private int moneyForMonth;
+    private final HashMap<Integer, Coins> treasury = new HashMap<>();
+    private final HashMap<Integer, Coins> coinCollection = new HashMap<>();
 
     public Budget(int numberOfCountry, int startValue) {
-        for (int i = 0; i < 100; i++) {
-            coinsWallet[i] = new Coins(0, i);
-        }
-        coinsWallet[numberOfCountry].setValue(startValue);
+        treasury.put(numberOfCountry, new Coins(startValue - 1, numberOfCountry));
+        coinCollection.put(numberOfCountry, new Coins(1, numberOfCountry));
         money = startValue;
+        moneyForMonth = money / 2;
     }
 
     public int getMoney() {
         return money;
     }
 
-    public void addCoins(Coins coins) {
-        coinsWallet[coins.getNumberOfCountry()].addValue(coins.getValue());
+    public int getMoneyForMonth() {
+        return moneyForMonth;
+    }
+
+      public void addCoins(Coins coins) {
+        if (treasury.containsKey(coins.getNumCountry())) {
+            treasury.get(coins.getNumCountry()).addValue(coins.getValue());
+        } else {
+            if(!coinCollection.containsKey(coins.getNumCountry())) {
+                coinCollection.put(coins.getNumCountry(), coins.subValue(1));
+            }
+            if (coins.getValue() > 0) {
+                treasury.put(coins.getNumCountry(), coins);
+            }
+        }
         money += coins.getValue();
     }
 
-    public void subCoins(Coins coins) {
-        coinsWallet[coins.getNumberOfCountry()].subValue(coins.getValue());
-        money -= coins.getValue();
+    public List<Coins> subCoins(int value) {
+        money -= value;
+        moneyForMonth -= value;
+        List<Coins> coinsList = new ArrayList<>();
+        Iterator<Map.Entry<Integer, Coins>> treasuryEntry = treasury.entrySet().iterator();
+
+        while (treasuryEntry.hasNext() && value > 0) {
+            Coins coins = treasuryEntry.next().getValue().subValue(value);
+            value -= coins.getValue();
+            coinsList.add(coins);
+        }
+        return coinsList;
     }
 
     public boolean coinsAllCountriesAvailable() {
-        for (Coins coins: coinsWallet) {
-            if (coins.getValue() == 0 ) { return false; }
-        }
-        return true;
+        return coinCollection.size() == World.AMOUNT_COUNTRIES;
     }
 }

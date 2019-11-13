@@ -21,12 +21,15 @@ public class Coins {
         this.value += value;
     }
 
-    public void subValue(int value) {
-        if (value <= this.value)
-            this.value -= value;
+    public Coins subValue(int value) {
+        if (this.value < value) {
+            value = this.value;
+        }
+        this.value -= value;
+        return new Coins(value, numberOfCountry);
     }
 
-    public int getNumberOfCountry() {
+    public int getNumCountry() {
         return numberOfCountry;
     }
 }

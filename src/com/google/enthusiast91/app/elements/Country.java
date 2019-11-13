@@ -2,7 +2,7 @@ package com.google.enthusiast91.app.elements;
 
 public class Country {
     private int number;
-    private Budget budget;
+    private final Budget budget;
     private int sumBuy;
     private int sumSale;
 
@@ -69,7 +69,7 @@ public class Country {
     }
 
     public void trade() {
-
+        int moneyMonth = budget.getMoneyForMonth();
     }
 
     public void report() {
