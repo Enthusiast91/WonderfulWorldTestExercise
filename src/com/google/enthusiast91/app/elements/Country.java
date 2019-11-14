@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 class Country {
     private final Budget budget = new Budget();
-    private int number;
+    private final int number;
     private int amountOfExpenses;
     private int amountOfProfit;
 
@@ -53,8 +53,8 @@ class Country {
 
         buy(countryBottom, moneyForNeighbours[3]);
         buy(countryRight, moneyForNeighbours[2]);
-        buy(countryLeft, moneyForNeighbours[0]);
-        buy(countryTop, moneyForNeighbours[1]);
+        buy(countryLeft, moneyForNeighbours[1]);
+        buy(countryTop, moneyForNeighbours[0]);
     }
 
     void clearData() {
@@ -69,6 +69,7 @@ class Country {
         arrString[2] = "Приход: " + amountOfProfit;
         return arrString;
     }
+
 
     private void buy(Country sellerCountry, int expenses) {
         if (expenses > 0) {

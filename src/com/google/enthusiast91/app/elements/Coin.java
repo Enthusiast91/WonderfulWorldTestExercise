@@ -1,8 +1,8 @@
 package com.google.enthusiast91.app.elements;
 
 class Coin {
+    private final int numberOfCountry;
     private int value;
-    private int numberOfCountry;
 
     Coin(int value, int numberOfCountry) {
         this.value = value;
