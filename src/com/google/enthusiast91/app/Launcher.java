@@ -4,23 +4,28 @@ import com.google.enthusiast91.app.elements.World;
 
 public class Launcher {
     public static void main(String[] args) {
+        gameLaunch();
+        System.out.println((char) 27 + "[31m" +
+                "****************************************************\n" +
+                "************** Поздравляю с победой ! **************\n" +
+                "****************************************************");
+    }
+
+    private static void gameLaunch() {
         World world = new World();
-        boolean victory = false;
-        for (int i = 0; !victory; i++) {
+        for (int i = 0; true; i++) {
             world.issueAnnualBudget(20);
-            for (int j = 0; (j < 12) && !victory; j++) {
+            for (int j = 0; j < 12; j++) {
                 world.calculateCountriesBudgetForMonth();
                 world.report(World.SIZE);
                 System.out.printf((char) 27 + "[34m================ Завершен месяц %03d ================\n", i * 12 + j);
                 System.out.println((char) 27 + "[0m");
+                if (world.victoryConditionsMet()) {
+                    return;
+                }
                 world.resetCountriesDataAboutTrade();
                 world.trade();
-                victory = world.victoryConditionsMet();
             }
         }
-        System.out.println((char) 27 + "[31m" +
-                        "****************************************************\n" +
-                        "************** Поздравляю с победой ! **************\n" +
-                        "****************************************************");
     }
 }
