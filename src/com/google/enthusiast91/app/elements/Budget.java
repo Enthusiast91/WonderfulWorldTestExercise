@@ -7,36 +7,29 @@ import java.util.Map;
 class Budget {
 
     /**
-     * Неприкосновенный запас.
-     * Коллекция монет, для сбора иностранной валюты. Монеты из НЗ не тратятся.
-     * Хранится не более 1-ой монеты каждой валюты.
-     */
-    private final HashMap<Integer, Coin> untouchableCoinCollection = new HashMap<>();
-
-    /**
      * Временное хранилище.
      * Используется для хранения прибыли до наступления следующего месяца.
      */
     private final HashMap<Integer, Coin> temporaryStorage = new HashMap<>();
 
     /**
-     * Казна.
+     * Основное хранилище.
      * Деньги которые идут на расходы.
      */
-    private final HashMap<Integer, Coin> treasury = new HashMap<>();
+    private final HashMap<Integer, Coin> mainStorage = new HashMap<>();
 
     private int moneyForMonth = 0;
 
-    int getSizeUntouchableCoinCollection() {
-        return untouchableCoinCollection.size();
+    int getSizeMainStorage() {
+        return mainStorage.size();
     }
 
     int getMoneyForMonth() {
         return moneyForMonth;
     }
 
-    int getMoneyOfTreasury() {
-        return treasury.values()
+    int getMoneyMainStorage() {
+        return mainStorage.values()
                 .stream()
                 .mapToInt(Coin::getValue)
                 .sum();
@@ -44,19 +37,13 @@ class Budget {
 
     /**
      * <li>Перед началом нового месяца деньги из временного хранилища перевозят в казну.</li>
-     * <li>При расчете денег на месяц учитываются как деньги казны, так и неприкосновенного запаса.</li>
      */
     void calculateMoneyForMonth() {
         for (Coin coin : temporaryStorage.values()) {
-            addCoinToTreasury(coin);
+            addCoinToMainStorage(coin);
         }
         temporaryStorage.clear();
-
-        int moneyOfTreasury = getMoneyOfTreasury();
-        moneyForMonth = (moneyOfTreasury + untouchableCoinCollection.size()) / 2;
-        if (moneyForMonth > moneyOfTreasury) {
-            moneyForMonth = moneyOfTreasury;
-        }
+        moneyForMonth = getMoneyMainStorage() / 2;
     }
 
     /**
@@ -71,13 +58,13 @@ class Budget {
         HashMap<Integer, Coin> coinMap = new HashMap<>();
 
         while (valueOfExpenses > 0) {
-            Iterator<Map.Entry<Integer, Coin>> treasuryEntry = treasury.entrySet().iterator();
-            while (treasuryEntry.hasNext() && valueOfExpenses > 0) {
-                Coin treasuryCoin = getNextCoin(treasuryEntry);
+            Iterator<Map.Entry<Integer, Coin>> mainStorageEntry = mainStorage.entrySet().iterator();
+            while (mainStorageEntry.hasNext() && valueOfExpenses > 0) {
+                Coin treasuryCoin = mainStorageEntry.next().getValue();
                 addCoin(treasuryCoin.subValue(1), coinMap);
                 valueOfExpenses--;
                 if (treasuryCoin.getValue() == 0) {
-                    treasuryEntry.remove();
+                    mainStorageEntry.remove();
                 }
             }
         }
@@ -94,28 +81,21 @@ class Budget {
         }
     }
 
-    void addCoinToTreasury(Coin coin) {
+    void addCoinToMainStorage(Coin coin) {
         if (coin.getValue() == 0) {
             return;
         }
-        if (!untouchableCoinCollection.containsKey(coin.getNumCountry())) {
-            untouchableCoinCollection.put(coin.getNumCountry(), coin.subValue(1));
-        }
-        addCoin(coin, treasury);
+        addCoin(coin, mainStorage);
     }
 
-    private void addCoin(Coin coin, HashMap<Integer, Coin> purpose) {
+    private void addCoin(Coin coin, HashMap<Integer, Coin> storage) {
         if (coin.getValue() == 0) {
             return;
         }
-        if (purpose.containsKey(coin.getNumCountry())) {
-            purpose.get(coin.getNumCountry()).addValue(coin.getValue());
+        if (storage.containsKey(coin.getNumCountry())) {
+            storage.get(coin.getNumCountry()).addValue(coin.getValue());
         } else {
-            purpose.put(coin.getNumCountry(), coin);
+            storage.put(coin.getNumCountry(), coin);
         }
-    }
-
-    private Coin getNextCoin(Iterator<Map.Entry<Integer, Coin>> treasuryEntry) {
-        return treasuryEntry.next().getValue();
     }
 }

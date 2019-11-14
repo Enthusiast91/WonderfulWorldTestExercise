@@ -38,7 +38,7 @@ class Country {
     }
 
     void replenishBudget(int annualBudget) {
-        budget.addCoinToTreasury(new Coin(annualBudget, number));
+        budget.addCoinToMainStorage(new Coin(annualBudget, number));
     }
 
     void trade() {
@@ -64,7 +64,7 @@ class Country {
 
     String[] getReport() {
         String[] arrString = new String[3];
-        arrString[0] = "Бюджет на начало месяца страны №" + number + ": " + (budget.getMoneyOfTreasury() + budget.getSizeUntouchableCoinCollection());
+        arrString[0] = "Бюджет на начало месяца страны №" + number + ": " + (budget.getMoneyMainStorage() + budget.getSizeMainStorage());
         arrString[1] = "Расход: " + amountOfExpenses;
         arrString[2] = "Приход: " + amountOfProfit;
         return arrString;

@@ -83,7 +83,7 @@ public class World implements Iterable<Country> {
 
     public boolean victoryConditionsMet() {
         for (Country country : this) {
-            if (country.getBudget().getSizeUntouchableCoinCollection() < AMOUNT_COUNTRIES) {
+            if (country.getBudget().getSizeMainStorage() < AMOUNT_COUNTRIES) {
                 return false;
             }
         }
