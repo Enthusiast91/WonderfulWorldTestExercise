@@ -3,7 +3,7 @@ package com.google.enthusiast91.app.elements;
 import java.util.Iterator;
 
 public class World implements Iterable<Country> {
-    private static final int SIZE = 10;
+    public static final int SIZE = 10;
     private static final int AMOUNT_COUNTRIES = SIZE * SIZE;
     private final Country[][] countries = new Country[SIZE][SIZE];
 
@@ -43,7 +43,7 @@ public class World implements Iterable<Country> {
         }
     }
 
-    public void calculateCountriesBudgetforMonth() {
+    public void calculateCountriesBudgetForMonth() {
         for (Country country : this) {
             country.getBudget().moneyTransferFromTemporaryStorage();
             country.getBudget().calculateMoneyForMonth();

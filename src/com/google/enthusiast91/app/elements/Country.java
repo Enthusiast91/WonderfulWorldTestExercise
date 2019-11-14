@@ -1,9 +1,8 @@
 package com.google.enthusiast91.app.elements;
 
 import java.util.HashMap;
-import java.util.List;
 
-public class Country {
+class Country {
     private final Budget budget = new Budget();
     private int number;
     private int amountOfExpenses;
@@ -42,6 +41,35 @@ public class Country {
         budget.addCoin(new Coin(annualBudget, number));
     }
 
+    void trade() {
+        int moneyForMonth = budget.getMoneyForMonth();
+        int[] moneyForNeighbours = new int[4];
+
+        for (int i = 4; (i > 0) && moneyForMonth > 0; i--) {
+            int moneyForOne = moneyForMonth > i ? moneyForMonth / i : 1;
+            moneyForNeighbours[4 - i] = moneyForOne;
+            moneyForMonth -= moneyForOne;
+        }
+
+        buy(countryBottom, moneyForNeighbours[3]);
+        buy(countryRight, moneyForNeighbours[2]);
+        buy(countryLeft, moneyForNeighbours[0]);
+        buy(countryTop, moneyForNeighbours[1]);
+    }
+
+    void clearData() {
+        amountOfExpenses = 0;
+        amountOfProfit = 0;
+    }
+
+    String[] getReport() {
+        String[] arrString = new String[3];
+        arrString[0] = "Бюджет на начало месяца страны №" + number + ": " + (budget.getMoneyOfTreasury() + budget.getSizeUntouchableCoinCollection());
+        arrString[1] = "Расход: " + amountOfExpenses;
+        arrString[2] = "Приход: " + amountOfProfit;
+        return arrString;
+    }
+
     private void buy(Country sellerCountry, int expenses) {
         if (expenses > 0) {
             amountOfExpenses += expenses;
@@ -55,47 +83,5 @@ public class Country {
             amountOfProfit += coin.getValue();
         }
         budget.addCoinsInTemporaryStorageUntilNextMonth(profit);
-    }
-
-    void trade() {
-        int moneyForMonth = budget.getMoneyForMonth();
-        int moneyForBuyInBottomCountry = 0;
-        int moneyForBuyInRightCountry = 0;
-        int moneyForBuyInLeftCountry = 0;
-        int moneyForBuyInTopCountry = 0;
-
-        while (moneyForMonth > 0) {
-            moneyForBuyInBottomCountry++;
-            if (--moneyForMonth == 0) { break; }
-
-            moneyForBuyInRightCountry++;
-            if (--moneyForMonth == 0) { break; }
-
-            moneyForBuyInLeftCountry++;
-            if (--moneyForMonth == 0) { break; }
-
-            moneyForBuyInTopCountry++;
-            if (--moneyForMonth == 0) { break; }
-        }
-
-        buy(countryBottom, moneyForBuyInBottomCountry);
-        buy(countryRight, moneyForBuyInRightCountry);
-        buy(countryLeft, moneyForBuyInLeftCountry);
-        buy(countryTop, moneyForBuyInTopCountry);
-    }
-
-    void clearData() {
-        amountOfExpenses = 0;
-        amountOfProfit = 0;
-    }
-
-    String[] getReport() {
-        String[] arrString = new String[5];
-        arrString[0] = "Бюджет на начало месяца страны №" + number + ": " + (budget.getMoneyOfTreasury() + budget.getSizeUntouchableCoinCollection());
-        arrString[1] = "Бюджет на месяц: " + budget.getMoneyForMonth();
-        arrString[2] = "Монет в коллекции: " + budget.getSizeUntouchableCoinCollection();
-        arrString[3] = "Расход: " + amountOfExpenses;
-        arrString[4] = "Приход: " + amountOfProfit;
-        return arrString;
     }
 }
