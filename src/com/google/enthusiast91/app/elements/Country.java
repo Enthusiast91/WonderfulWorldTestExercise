@@ -38,7 +38,7 @@ class Country {
     }
 
     void replenishBudget(int annualBudget) {
-        budget.addCoin(new Coin(annualBudget, number));
+        budget.addCoinToTreasury(new Coin(annualBudget, number));
     }
 
     void trade() {
@@ -70,7 +70,6 @@ class Country {
         return arrString;
     }
 
-
     private void buy(Country sellerCountry, int expenses) {
         if (expenses > 0) {
             amountOfExpenses += expenses;
@@ -83,6 +82,6 @@ class Country {
         for (Coin coin : profit.values()) {
             amountOfProfit += coin.getValue();
         }
-        budget.addCoinsInTemporaryStorageUntilNextMonth(profit);
+        budget.addCoins(profit);
     }
 }

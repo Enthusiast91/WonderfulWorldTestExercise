@@ -45,7 +45,6 @@ public class World implements Iterable<Country> {
 
     public void calculateCountriesBudgetForMonth() {
         for (Country country : this) {
-            country.getBudget().moneyTransferFromTemporaryStorage();
             country.getBudget().calculateMoneyForMonth();
         }
     }
