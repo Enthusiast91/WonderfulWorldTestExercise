@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Country {
-    private final Budget budget;
+    private final Budget budget = new Budget();
     private int number;
     private int amountOfExpenses;
     private int amountOfProfit;
@@ -16,7 +16,6 @@ public class Country {
 
     Country(int number) {
         this.number = number;
-        budget = new Budget(number);
     }
 
     Budget getBudget() {

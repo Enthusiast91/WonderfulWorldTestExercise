@@ -1,8 +1,7 @@
 package com.google.enthusiast91.app.elements;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 class Budget {
     private final HashMap<Integer, Coin> treasury = new HashMap<>();
@@ -10,11 +9,6 @@ class Budget {
     private HashMap<Integer, Coin> temporaryStorage = new HashMap<>();
     private int moneyOfTreasury = 0;
     private int moneyForMonth = 0;
-    private int numberCountry;
-
-    Budget(int numberCountry) {
-        this.numberCountry = numberCountry;
-    }
 
     int getMoneyOfTreasury() {
         return moneyOfTreasury;
@@ -58,26 +52,24 @@ class Budget {
     }
 
     HashMap<Integer, Coin> subCoins(int valueOfExpenses) {
-        if (numberCountry == 0) {
-            int n = 0;
-        }
         moneyOfTreasury -= valueOfExpenses;
         moneyForMonth -= valueOfExpenses;
-
         HashMap<Integer, Coin> coinMap = new HashMap<>();
 
-        while (valueOfExpenses > 0) {
-            Iterator<Map.Entry<Integer, Coin>> treasuryEntry = treasury.entrySet().iterator();
-            while (treasuryEntry.hasNext() && valueOfExpenses > 0) {
-                Coin treasuryCoin = getNextCoin(treasuryEntry);
-                addCoinToHashMap(treasuryCoin.subValue(1), coinMap);
-                valueOfExpenses--;
-                if (treasuryCoin.getValue() == 0) {
-                    treasuryEntry.remove();
-                }
+        List<Integer> countryNumberSortedList = treasury.values().stream()
+                .sorted(Comparator.comparingInt(Coin::getValue))
+                .map(Coin::getNumCountry)
+                .collect(Collectors.toList());
+
+        for (Integer countryNumber : countryNumberSortedList) {
+            int valueSubAtIter = (valueOfExpenses > treasury.size()) ? (valueOfExpenses / treasury.size()) : 1;
+            Coin coin = treasury.get(countryNumber).subValue(valueSubAtIter);
+            coinMap.put(countryNumber, coin);
+            valueOfExpenses -= coin.getValue();
+            if (coin.getValue() == 0) {
+                treasury.remove(countryNumber);
             }
         }
-
         return coinMap;
     }
 

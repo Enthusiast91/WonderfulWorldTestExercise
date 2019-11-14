@@ -16,7 +16,7 @@ public class Launcher {
                 System.out.println((char) 27 + "[0m");
                 world.resetCountriesDataAboutTrade();
                 world.trade();
-                victory = world.victoryConditionsExecuted();
+                victory = world.victoryConditionsMet();
             }
         }
         System.out.println((char) 27 + "[31m" +

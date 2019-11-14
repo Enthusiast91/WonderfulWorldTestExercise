@@ -13,7 +13,6 @@ public class World implements Iterable<Country> {
                 countries[i][j] = new Country(i * SIZE + j);
             }
         }
-
         countries[0][0].setCountryTop(countries[SIZE - 1][0]);
         countries[SIZE - 1][0].setCountryBottom(countries[0][0]);
         countries[0][0].setCountryLeft(countries[0][SIZE - 1]);
@@ -83,7 +82,7 @@ public class World implements Iterable<Country> {
         }
     }
 
-    public boolean victoryConditionsExecuted() {
+    public boolean victoryConditionsMet() {
         for (Country country : this) {
             if (country.getBudget().getSizeUntouchableCoinCollection() < AMOUNT_COUNTRIES) {
                 return false;
