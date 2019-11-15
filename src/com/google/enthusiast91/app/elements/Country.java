@@ -57,7 +57,7 @@ class Country {
         buy(countryTop, moneyForNeighbours[0]);
     }
 
-    void clearData() {
+    void clearTradingData() {
         amountOfExpenses = 0;
         amountOfProfit = 0;
     }

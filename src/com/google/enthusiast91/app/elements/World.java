@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 public class World implements Iterable<Country> {
     public static final int SIZE = 10;
-    private static final int AMOUNT_COUNTRIES = SIZE * SIZE;
+    private static final int NUMBER_OF_COUNTRIES = SIZE * SIZE;
     private final Country[][] countries = new Country[SIZE][SIZE];
 
     public World() {
@@ -49,29 +49,29 @@ public class World implements Iterable<Country> {
         }
     }
 
-    public void resetCountriesDataAboutTrade() {
+    public void resetCountriesTradingData() {
         for (Country country : this) {
-            country.clearData();
+            country.clearTradingData();
         }
     }
 
-    public void trade() {
+    public void launchOfTading() {
         for (Country country : this) {
             country.trade();
         }
     }
 
     public void report(int numberOfColumns) {
-        int amountStrings = countries[0][0].getReport().length;
+        int numberOfStrings = countries[0][0].getReport().length;
 
-        for (int i = 0; i < AMOUNT_COUNTRIES / numberOfColumns; i++) {
-            String[][] arrReport = new String[numberOfColumns][amountStrings];
+        for (int i = 0; i < NUMBER_OF_COUNTRIES / numberOfColumns; i++) {
+            String[][] arrReport = new String[numberOfColumns][numberOfStrings];
             for (int j = 0; j < numberOfColumns; j++) {
                 int m = (i * numberOfColumns + j) / SIZE;
                 int n = (i * numberOfColumns + j) % SIZE;
                 arrReport[j] = countries[m][n].getReport();
             }
-            for (int k = 0; k < amountStrings; k++) {
+            for (int k = 0; k < numberOfStrings; k++) {
                 for (int j = 0; j < numberOfColumns; j++) {
                     System.out.printf("%46s", arrReport[j][k]);
                 }
@@ -83,7 +83,7 @@ public class World implements Iterable<Country> {
 
     public boolean victoryConditionsMet() {
         for (Country country : this) {
-            if (country.getBudget().getSizeMainStorage() < AMOUNT_COUNTRIES) {
+            if (country.getBudget().getSizeMainStorage() < NUMBER_OF_COUNTRIES) {
                 return false;
             }
         }
@@ -97,7 +97,7 @@ public class World implements Iterable<Country> {
 
             @Override
             public boolean hasNext() {
-                return (currentIndex < AMOUNT_COUNTRIES);
+                return (currentIndex < NUMBER_OF_COUNTRIES);
             }
 
             @Override

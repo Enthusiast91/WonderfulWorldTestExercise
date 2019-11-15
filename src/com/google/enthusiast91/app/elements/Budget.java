@@ -75,8 +75,8 @@ class Budget {
      * Для того что-бы страна сразу же не воспользовалась деньгами, которые ей пришли в этом месяце
      * прибыль помещается во временное хранилище, до наступления следующего месяца.
      */
-    void addCoins(HashMap<Integer, Coin> sumOfExpenses) {
-        for (Coin coin : sumOfExpenses.values()) {
+    void addCoins(HashMap<Integer, Coin> coins) {
+        for (Coin coin : coins.values()) {
             addCoin(coin, temporaryStorage);
         }
     }

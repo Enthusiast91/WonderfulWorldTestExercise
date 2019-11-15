@@ -1,12 +1,12 @@
 package com.google.enthusiast91.app.elements;
 
 class Coin {
-    private final int numberOfCountry;
+    private final int countryNumber;
     private int value;
 
-    Coin(int value, int numberOfCountry) {
+    Coin(int value, int countryNumber) {
         this.value = value;
-        this.numberOfCountry = numberOfCountry;
+        this.countryNumber = countryNumber;
     }
 
     int getValue() {
@@ -22,10 +22,10 @@ class Coin {
             value = this.value;
         }
         this.value -= value;
-        return new Coin(value, numberOfCountry);
+        return new Coin(value, countryNumber);
     }
 
     int getNumCountry() {
-        return numberOfCountry;
+        return countryNumber;
     }
 }

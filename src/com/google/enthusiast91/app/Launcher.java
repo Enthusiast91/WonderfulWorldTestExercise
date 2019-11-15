@@ -23,8 +23,8 @@ public class Launcher {
                 if (world.victoryConditionsMet()) {
                     return;
                 }
-                world.resetCountriesDataAboutTrade();
-                world.trade();
+                world.resetCountriesTradingData();
+                world.launchOfTading();
             }
         }
     }
