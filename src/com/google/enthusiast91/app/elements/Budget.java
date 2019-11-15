@@ -1,8 +1,7 @@
 package com.google.enthusiast91.app.elements;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 class Budget {
 
@@ -57,15 +56,22 @@ class Budget {
         moneyForMonth -= valueOfExpenses;
         HashMap<Integer, Coin> coinMap = new HashMap<>();
 
-        while (valueOfExpenses > 0) {
-            Iterator<Map.Entry<Integer, Coin>> mainStorageEntry = mainStorage.entrySet().iterator();
-            while (mainStorageEntry.hasNext() && valueOfExpenses > 0) {
-                Coin treasuryCoin = mainStorageEntry.next().getValue();
-                addCoin(treasuryCoin.subValue(1), coinMap);
-                valueOfExpenses--;
-                if (treasuryCoin.getValue() == 0) {
-                    mainStorageEntry.remove();
-                }
+        List<Integer> countryNumberSortedList = mainStorage.values().stream()
+                .sorted((Coin c1, Coin c2) -> Integer.compare(c2.getValue(), c1.getValue()))
+                .map(Coin::getNumCountry)
+                .collect(Collectors.toList());
+
+        for (Integer countryNumber : countryNumberSortedList) {
+            int valueSubAtIter = (valueOfExpenses > mainStorage.size()) ? (valueOfExpenses / mainStorage.size()) : 1;
+            Coin coin = mainStorage.get(countryNumber).subValue(valueSubAtIter);
+            coinMap.put(countryNumber, coin);
+            valueOfExpenses -= coin.getValue();
+
+            if (coin.getValue() == 0) {
+                mainStorage.remove(countryNumber);
+            }
+            if(valueOfExpenses <= 0) {
+                return coinMap;
             }
         }
         return coinMap;

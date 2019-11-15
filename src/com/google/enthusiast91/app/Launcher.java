@@ -4,11 +4,14 @@ import com.google.enthusiast91.app.elements.World;
 
 public class Launcher {
     public static void main(String[] args) {
+        float startTime = System.nanoTime();
         gameLaunch();
         System.out.println((char) 27 + "[31m" +
                 "****************************************************\n" +
                 "************** Поздравляю с победой ! **************\n" +
                 "****************************************************");
+        float endTime = System.nanoTime();
+        System.out.println((char) 27 + "[0m" + (endTime - startTime) / 1_000_000);
     }
 
     private static void gameLaunch() {
