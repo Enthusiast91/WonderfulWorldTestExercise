@@ -11,7 +11,7 @@ public class Launcher {
                 "************** Поздравляю с победой ! **************\n" +
                 "****************************************************");
         float endTime = System.nanoTime();
-        System.out.println((char) 27 + "[0m" + (endTime - startTime) / 1_000_000);
+        System.out.println((char) 27 + "[0m" + (endTime - startTime) / 1_000_000_000 + " сек");
     }
 
     private static void gameLaunch() {

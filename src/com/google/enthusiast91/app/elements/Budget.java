@@ -39,7 +39,7 @@ class Budget {
      */
     void calculateMoneyForMonth() {
         for (Coin coin : temporaryStorage.values()) {
-            addCoinToMainStorage(coin);
+            addCoin(coin, mainStorage);
         }
         temporaryStorage.clear();
         moneyForMonth = getMoneyMainStorage() / 2;
@@ -70,7 +70,7 @@ class Budget {
             if (coin.getValue() == 0) {
                 mainStorage.remove(countryNumber);
             }
-            if(valueOfExpenses <= 0) {
+            if(valueOfExpenses == 0) {
                 return coinMap;
             }
         }
@@ -85,13 +85,6 @@ class Budget {
         for (Coin coin : coins.values()) {
             addCoin(coin, temporaryStorage);
         }
-    }
-
-    void addCoinToMainStorage(Coin coin) {
-        if (coin.getValue() == 0) {
-            return;
-        }
-        addCoin(coin, mainStorage);
     }
 
     private void addCoin(Coin coin, HashMap<Integer, Coin> storage) {

@@ -38,7 +38,9 @@ class Country {
     }
 
     void replenishBudget(int annualBudget) {
-        budget.addCoinToMainStorage(new Coin(annualBudget, number));
+        budget.addCoins(new HashMap<Integer, Coin>() {{
+            put(number, new Coin(annualBudget, number));
+        }});
     }
 
     void trade() {
