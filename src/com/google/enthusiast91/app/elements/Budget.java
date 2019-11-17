@@ -47,9 +47,12 @@ class Budget {
 
     /**
      * Создание набора монет для оплаты:
-     * <li>- Несколько раз перебираем монеты казны, доступные для расходов;</li>
-     * <li>- Добавляем по 1-ой монете всех доступных валют, пока не наберётся неоходимое количество.</li>
-     *
+     * Из набора монет главного хранилища создаем список номеров стран, отсортированных в порядке уменьшения количества монет в хранилище<br>
+     * Двигаясь по списку определяем сколько монет этой страны можем взять:
+     * <ul>
+     * <li> Делим сумму расходов на количество присутствующих в хранилище валют, что бы получить равномерное распределение,</li>
+     * <li> Забираем эти монеты из хранилища и добавляем в набор, который в конце вернется как результат вычитания.</li>
+     * </ul>
      * @return Набор монет для оплаты расходов.
      */
     HashMap<Integer, Coin> subCoins(int valueOfExpenses) {
@@ -62,8 +65,8 @@ class Budget {
                 .collect(Collectors.toList());
 
         for (Integer countryNumber : countryNumberSortedList) {
-            int valueSubAtIter = (valueOfExpenses > mainStorage.size()) ? (valueOfExpenses / mainStorage.size()) : 1;
-            Coin coin = mainStorage.get(countryNumber).subValue(valueSubAtIter);
+            int subValuesAtStep = (valueOfExpenses > mainStorage.size()) ? (valueOfExpenses / mainStorage.size()) : 1;
+            Coin coin = mainStorage.get(countryNumber).subValue(subValuesAtStep);
             coinMap.put(countryNumber, coin);
             valueOfExpenses -= coin.getValue();
 
